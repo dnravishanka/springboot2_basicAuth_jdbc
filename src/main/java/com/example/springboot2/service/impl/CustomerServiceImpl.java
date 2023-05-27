@@ -20,6 +20,13 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     CustomerRepository customerRepository;
+   /* private CustomerRepository customerRepository;
+
+      // --------- dependency injection through constructor-----
+    public CustomerServiceImpl(CustomerRepository customerRepository) {
+        this.customerRepository=customerRepository;
+    }*/
+
     @Autowired
     ModelMapper modelMapper;
     @Override
