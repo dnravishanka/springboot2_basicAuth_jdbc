@@ -1,8 +1,11 @@
 package com.example.springboot2.security;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -17,6 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
     // =========defautlPasswordEncorder is not safe and is to be deprecated=====
 
@@ -43,7 +47,7 @@ public class SecurityConfig {
     }*/
 
     //-------------PasswordEncoder for better Encoding --------
-    @Bean
+   /* @Bean
     public UserDetailsService userDetailsService() {
         UserDetails user1 = User.builder().username("admin")
                 .password(passwordEncoder().encode("1234"))
@@ -59,13 +63,18 @@ public class SecurityConfig {
                 .build();
         return new InMemoryUserDetailsManager(user1,user2,user3);
     }
+*/
 
 
+   @Bean
+    public UserDetailsService userDetailsService() {
+        return new AppUserDetailsService();
+    }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
         //csrf().disable() --> for activate post,delete,put method    / without this only allowed for GET method
         httpSecurity
-                .csrf().disable()
+
                 .authorizeHttpRequests((auth)->auth
                         .requestMatchers("/api/v/customer/all").hasRole("ADMIN")
                         .requestMatchers("/api/v/customer/").hasRole("ADMIN")
@@ -77,6 +86,13 @@ public class SecurityConfig {
 //        httpSecurity.csrf().disable();
         return httpSecurity.build();
 
+    }
+   @Bean
+    DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService());
+        return daoAuthenticationProvider;
     }
     @Bean
     public PasswordEncoder passwordEncoder() {

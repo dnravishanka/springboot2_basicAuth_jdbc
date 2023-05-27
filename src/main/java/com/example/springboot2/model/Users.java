@@ -1,6 +1,8 @@
 package com.example.springboot2.model;
 
 import jakarta.persistence.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,6 +10,7 @@ import java.util.List;
 
 @Entity
 public class Users {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;

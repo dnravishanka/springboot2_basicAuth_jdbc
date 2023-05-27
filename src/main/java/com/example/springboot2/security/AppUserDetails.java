@@ -2,9 +2,12 @@ package com.example.springboot2.security;
 
 import com.example.springboot2.model.Users;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class AppUserDetails implements UserDetails {
     private Users users;
@@ -15,7 +18,18 @@ public class AppUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        List<String> permissonList = this.users.getPermissonList();
+        for (String p:permissonList) {
+            GrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(p);
+            authorities.add(simpleGrantedAuthority);
+        }
+        List<String> rollList = this.users.getRollList();
+        for (String r : rollList) {
+            GrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(r);
+            authorities.add(simpleGrantedAuthority);
+        }
+        return authorities;
     }
 
     @Override

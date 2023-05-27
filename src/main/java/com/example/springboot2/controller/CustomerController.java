@@ -6,6 +6,7 @@ import com.example.springboot2.util.StandResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,6 +42,7 @@ public class CustomerController {
     }
 
     @GetMapping("/all")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<CustomerDto> getAllCustomer() {
         List<CustomerDto> allCustomers = customerService.getAllCustomers();
         return new ResponseEntity(new StandResponse(200, "true", allCustomers), HttpStatus.OK);
